@@ -19,7 +19,7 @@ type Config struct {
 	RateLimit int `env:"WHIP_RATE_LIMIT" env-default:"3"`
 	// Cooldown is the minimum interval between messages sent to the agent.
 	// Whips during the cooldown still count and play on the overlay.
-	Cooldown time.Duration `env:"WHIP_COOLDOWN" env-default:"15s"`
+	Cooldown time.Duration `env:"WHIP_COOLDOWN" env-default:"3s"`
 	// Interrupt makes whips interrupt Claude Code's current turn.
 	Interrupt bool `env:"WHIP_INTERRUPT" env-default:"true"`
 

@@ -31,9 +31,10 @@ In another terminal, start Claude Code through the wrapper, in any project:
 whipped claude
 ```
 
-In OBS, add a **Browser Source** with the URL `http://127.0.0.1:8080`. That's it, `!whip` in your chat now reaches Claude Code.
+> [!NOTE]
+> If `whipbot` or `whipped` is not found, add Go's bin directory to your `PATH` (`export PATH="$PATH:$(go env GOPATH)/bin"`).
 
-If `whipbot` or `whipped` is not found, add Go's bin directory to your `PATH` (`export PATH="$PATH:$(go env GOPATH)/bin"`).
+In OBS, add a **Browser Source** with the URL `http://127.0.0.1:8080`. That's it, `!whip` in your chat now reaches Claude Code.
 
 ### Testing
 
