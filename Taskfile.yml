@@ -1,0 +1,72 @@
+# See https://taskfile.dev
+version: '3'
+
+# Missing .env is fine: defaults from internal/config apply.
+dotenv: ['.env']
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  build:
+    desc: Build the overlay, the bot and the Claude Code wrapper
+    cmds:
+      - task: overlay
+      - task: backend
+
+  overlay:
+    desc: Build the OBS overlay
+    dir: web
+    cmds:
+      - bun install --frozen-lockfile
+      - bun run build
+    sources:
+      - src/**/*
+      - index.html
+      - package.json
+      - bun.lock
+      - tsconfig.json
+      - vite.config.ts
+    generates:
+      - dist/index.html
+
+  backend:
+    desc: Build the bot and the Claude Code wrapper
+    cmds:
+      - go build -o bin/whipbot ./cmd/whipbot
+      - go build -o bin/whipped ./cmd/whipped
+    sources:
+      - '**/*.go'
+      - go.mod
+      - go.sum
+      - web/dist/**/*
+    generates:
+      - bin/whipbot
+      - bin/whipped
+
+  install:
+    desc: Install whipbot and the Claude Code wrapper into GOBIN
+    cmds:
+      - task: overlay
+      - go install ./cmd/whipbot ./cmd/whipped
+
+  run:
+    desc: Build everything and run the bot with the built overlay
+    deps: [build]
+    cmds:
+      - ./bin/whipbot
+
+  dev:
+    desc: Overlay dev server with hot reload; run the backend separately
+    dir: web
+    cmds:
+      - bun run dev
+
+  test:
+    desc: Run Go tests and type-check the overlay
+    cmds:
+      # whipbot embeds the built overlay.
+      - task: overlay
+      - go test ./...
+      - cd web && bunx vue-tsc --noEmit
